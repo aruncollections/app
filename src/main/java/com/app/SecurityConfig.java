@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -22,19 +23,26 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(final HttpSecurity http) throws Exception {
         http
-                .authorizeRequests()
-                //.antMatchers("/authenticate").permitAll()
-                .antMatchers("/**", "/login/**", "/actuator/**").permitAll()
+            .authorizeRequests()
+                .antMatchers( "/authenticate").permitAll()
+                .antMatchers("/actuator/**").permitAll()
                 .antMatchers("/dashboard/**").authenticated()
-                .anyRequest().permitAll()
-                .and()
+                .antMatchers("/dashboard/*").authenticated()
+                .antMatchers("/dashboard/hello").authenticated()
+            .and()
                 .httpBasic()
                 .and()
                 .logout()
                 .logoutUrl("/logout")
-                .logoutSuccessUrl("/login")
-                .and()
-                .csrf().disable();
+                .logoutSuccessUrl("/login?logout")
+                .invalidateHttpSession(true)
+                .deleteCookies("JSESSIONID")
+            .and()
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
+                .maximumSessions(1).expiredUrl("/login")
+            .and().and()
+            .csrf().disable();
     }
 
     @Override
