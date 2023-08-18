@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Slf4j
 @RestController
 @RequestMapping("/dashboard")
-public class HomeController {
+public class DashboardController {
 
     @GetMapping("hello")
     public ResponseEntity hello() {

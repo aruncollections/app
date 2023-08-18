@@ -10,6 +10,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,17 +24,20 @@ public class AuthController {
     @Autowired
     private AuthenticationManager authenticationManager;
 
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
+
     @PostMapping("authenticate")
     public ResponseEntity<HttpStatus> login(@RequestBody User user) throws Exception {
         Authentication authObject = null;
         try {
             log.info("User {} logging in", user.getEmail());
+            log.info("User {} logging in", passwordEncoder.encode("adminp@ss"));
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
             SecurityContextHolder.getContext().setAuthentication(authObject);
         } catch (BadCredentialsException e) {
             log.error("Invalid login by user {}", user.getEmail());
             return ResponseEntity.badRequest().build();
-            //throw new Exception("Invalid credentials");
         }
 
         return ResponseEntity.ok().build();
