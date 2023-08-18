@@ -11,7 +11,3 @@ CREATE TABLE IF NOT EXISTS user (
   updated_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   last_edited_by VARCHAR(255)
 );
-
-
-
-
