@@ -3,6 +3,7 @@ plugins {
 	id 'org.springframework.boot' version '2.7.14'
 	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
 	id 'io.freefair.lombok' version '8.1.0'
+	id 'com.diffplug.spotless' version '6.20.0'
 }
 
 group = 'com.app'
@@ -31,10 +32,18 @@ dependencies {
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
-
-	//developmentOnly 'org.springframework.boot:spring-boot-devtools'
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+spotless {
+	java {
+		target '**/*.java'
+		importOrder ''
+		removeUnusedImports()
+		googleJavaFormat()
+		formatAnnotations()
+	}
 }
