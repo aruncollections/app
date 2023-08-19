@@ -36,3 +36,34 @@
     transform: rotate(360deg);
   }
 }
+
+
+.App {
+  text-align: center;
+}
+
+nav {
+  background-color: #333;
+  padding: 10px 0;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+}
+
+li {
+  margin: 0 15px;
+}
+
+li a {
+  text-decoration: none;
+  color: white;
+  font-weight: bold;
+}
+
+li a:hover {
+  color: #ff6600;
+}
