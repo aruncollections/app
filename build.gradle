@@ -48,3 +48,17 @@ spotless {
 		formatAnnotations()
 	}
 }
+
+task buildAndCopy(type: Exec) {
+	workingDir "${project.projectDir}/frontend" // Set the working directory to your project directory
+	commandLine 'yarn', 'build' // Run the 'yarn build' command
+}
+
+task copyBuiltScripts(type: Copy) {
+	from "${project.projectDir}/frontend/build"
+	into "${project.buildDir}/resources/main/public/."
+}
+
+copyBuiltScripts.dependsOn buildAndCopy
+
+compileJava.dependsOn copyBuiltScripts

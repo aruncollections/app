@@ -22,32 +22,32 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Override
   public void configure(final HttpSecurity http) throws Exception {
+    // @formatter:off
+
     http.authorizeRequests()
-        .antMatchers("/authenticate")
-        .permitAll()
-        .antMatchers("/public/**")
-        .permitAll()
-        .antMatchers("/actuator/**")
-        .permitAll()
-        .anyRequest()
-        .authenticated()
+          .antMatchers("/authenticate").permitAll()
+          .antMatchers("/public/**").permitAll()
+          .antMatchers("/actuator/**").permitAll()
+          .antMatchers("/index.html").authenticated()
+          .anyRequest().authenticated()
         .and()
-        .httpBasic()
+          .httpBasic()
+          .and()
+          .logout()
+          .logoutUrl("/logout")
+          .logoutSuccessUrl("/login?logout")
+          .invalidateHttpSession(true)
+          .deleteCookies("JSESSIONID")
         .and()
-        .logout()
-        .logoutUrl("/logout")
-        .logoutSuccessUrl("/login?logout")
-        .invalidateHttpSession(true)
-        .deleteCookies("JSESSIONID")
+          .sessionManagement()
+          .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+          .maximumSessions(1)
+          .expiredUrl("/login")
+          .and()
         .and()
-        .sessionManagement()
-        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
-        .maximumSessions(1)
-        .expiredUrl("/login")
-        .and()
-        .and()
-        .csrf()
-        .disable();
+        .csrf().disable();
+
+    // @formatter:on
   }
 
   @Override
