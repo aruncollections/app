@@ -22,32 +22,36 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Override
   public void configure(final HttpSecurity http) throws Exception {
-    // @formatter:off
-
     http.authorizeRequests()
-          .antMatchers("/authenticate").permitAll()
-          .antMatchers("/public/**").permitAll()
-          .antMatchers("/actuator/**").permitAll()
-          .antMatchers("/index.html").authenticated()
-          .anyRequest().authenticated()
+        .antMatchers("/authenticate")
+        .permitAll()
+        .antMatchers("/public/**")
+        .permitAll()
+        .antMatchers("/actuator/**")
+        .permitAll()
+        .anyRequest()
+        .authenticated()
         .and()
-          .httpBasic()
-          .and()
-          .logout()
-          .logoutUrl("/logout")
-          .logoutSuccessUrl("/login?logout")
-          .invalidateHttpSession(true)
-          .deleteCookies("JSESSIONID")
+        // .httpBasic()
+        .formLogin()
+        // .loginProcessingUrl("/perform_login")
+        // .defaultSuccessUrl("/dashboard.html",true)
+        // .failureUrl("/index.html?error=true")
         .and()
-          .sessionManagement()
-          .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
-          .maximumSessions(1)
-          .expiredUrl("/login")
-          .and()
+        .logout()
+        .logoutUrl("/logout")
+        .logoutSuccessUrl("/login?logout")
+        .invalidateHttpSession(true)
+        .deleteCookies("JSESSIONID")
         .and()
-        .csrf().disable();
-
-    // @formatter:on
+        .sessionManagement()
+        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+        .maximumSessions(1)
+        .expiredUrl("/login")
+        .and()
+        .and()
+        .csrf()
+        .disable();
   }
 
   @Override
