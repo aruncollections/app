@@ -1,3 +1,3 @@
-investorId,investorName,investedAmount,updatedAmount,uploadedBy
-1,  Arun,  1000.50 , 500, NA
-2,   Vidu,  10000 , 5000, NA
+investorId,email,investorName,instrument,investedAmount,updatedAmount,uploadedBy
+1, user1@app.com, Arun, BAC, 1000.50 , 500, NA
+2, user2@app.com,  Vidu, GOOGL ,10000 , 5000, NA

@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import liquibase.repackaged.com.opencsv.bean.CsvToBean;
 import liquibase.repackaged.com.opencsv.bean.CsvToBeanBuilder;
@@ -20,10 +21,17 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/dashboard")
 public class DashboardController {
 
+  List<InvestedInfo> testdata = new ArrayList<>();
+
   @GetMapping("hello")
   public ResponseEntity hello() {
     log.info("Hello");
     return ResponseEntity.ok().body("Hello, App is up - " + LocalDateTime.now());
+  }
+
+  @GetMapping
+  public ResponseEntity<List<InvestedInfo>> getInvestedInfo() {
+    return ResponseEntity.ok().body(testdata);
   }
 
   @PreAuthorize("hasAuthority('ADMIN')")
@@ -36,8 +44,9 @@ public class DashboardController {
               .withIgnoreLeadingWhiteSpace(true)
               .build();
 
-      List<InvestedInfo> users = csvToBean.parse();
-      log.info("Uploaded data: {}", users);
+      List<InvestedInfo> uploadedData = csvToBean.parse();
+      testdata.addAll(uploadedData);
+      log.info("Uploaded data: {}", uploadedData);
     } catch (Exception exception) {
       log.error("Unable to parse {}", exception);
       return ResponseEntity.badRequest().build();
