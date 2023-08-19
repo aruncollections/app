@@ -17,11 +17,10 @@ public class User {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  private String email;
+  private String emailId;
 
   private String password;
 
-  @Column(name = "is_active")
   private boolean isActive;
 
   @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)

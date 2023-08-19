@@ -27,13 +27,13 @@ public class AuthController {
   public ResponseEntity<HttpStatus> login(@RequestBody User user) throws Exception {
     Authentication authObject = null;
     try {
-      log.info("User {} logging in", user.getEmail());
+      log.info("User {} logging in", user.getEmailId());
       log.info("User {} logging in", passwordEncoder.encode("adminp@ss"));
       authenticationManager.authenticate(
-          new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
+          new UsernamePasswordAuthenticationToken(user.getEmailId(), user.getPassword()));
       SecurityContextHolder.getContext().setAuthentication(authObject);
     } catch (BadCredentialsException e) {
-      log.error("Invalid login by user {}", user.getEmail());
+      log.error("Invalid login by user {}", user.getEmailId());
       return ResponseEntity.badRequest().build();
     }
 

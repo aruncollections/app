@@ -28,7 +28,7 @@ function Home() {
         <tbody>
           {data.map((item) => (
             <tr key={item.id}>
-              <td>{item.email}</td>
+              <td>{item.emailId}</td>
               <td>{item.instrument}</td>
               <td>{item.investedAmount}</td>
               <td>{item.updatedAmount}</td>

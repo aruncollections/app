@@ -16,11 +16,12 @@ public class AppUserDetailsService implements UserDetailsService {
   @Autowired private UserRepository userRepository;
 
   @Override
-  public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+  public UserDetails loadUserByUsername(String emailId) throws UsernameNotFoundException {
     User existingUser =
         userRepository
-            .findByEmail(email)
-            .orElseThrow(() -> new UsernameNotFoundException("User " + email + " is not found!"));
+            .findByEmailId(emailId)
+             .filter(user -> user.isActive())
+            .orElseThrow(() -> new UsernameNotFoundException("User " + emailId + " is not found!"));
 
     return new AppUserDetails(existingUser);
   }
