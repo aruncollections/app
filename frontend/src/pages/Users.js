@@ -7,6 +7,7 @@ function Users() {
   const [selectedRow, setSelectedRow] = useState(null);
   const [dataFetching, setDataFetching] = useState(true);
   const [updateError, setUpdateError] = useState(null);
+  const [activateSuccess, setActivateSuccess] = useState(false);
   const usersUrl = '/users';
   const activateUrl = '/activate';
   const inactivateUrl = '/inactivate';
@@ -21,8 +22,8 @@ function Users() {
       .catch((error) => console.error('Error fetching data:', error));
   }, [dataFetching]);
 
-  const handleRowClick = (selectedId) => {
-    setSelectedRow(selectedId);
+  const handleRowClick = (selectedItem) => {
+    setSelectedRow(selectedItem);
   };
 
   const handleActivate = async () => {
@@ -31,7 +32,9 @@ function Users() {
         // Assuming you have an API endpoint to activate the user
         const response = await axios.put(`${activateUrl}/${selectedRow.emailId}`);
         console.log('User activated:', response.data);
+        setActivateSuccess(true);
         setDataFetching(true);
+        setUpdateError(null);
       } catch (error) {
         console.error('Error activating user:', error);
         setUpdateError('Error activating user. Please try again.');
@@ -47,7 +50,14 @@ function Users() {
       {updateError && (
         <p className="error-message">{updateError}</p>
       )}
+      {activateSuccess && (
+        <p className="success-message">User activated successfully!</p>
+      )}
       <br />
+
+      {selectedRow && (
+        <button onClick={handleActivate}>Activate User</button>
+      )}
 
       <table className="dark-table">
         <thead>
@@ -61,7 +71,11 @@ function Users() {
         </thead>
         <tbody>
           {data.length > 0 ? data.map((item) => (
-            <tr key={item.id} onClick={() => handleRowClick(item)}>
+            <tr
+              key={item.id}
+              className={selectedRow === item ? 'selected-row' : ''}
+              onClick={() => handleRowClick(item)}
+            >
               <td>{item.id}</td>
               <td>{item.emailId}</td>
               <td>{item.firstName}</td>
@@ -75,10 +89,6 @@ function Users() {
           )}
         </tbody>
       </table>
-
-      {selectedRow && (
-        <button onClick={handleActivate}>Activate User</button>
-      )}
     </div>
   );
 }
