@@ -35,8 +35,8 @@ CREATE TABLE IF NOT EXISTS investment_data (
   id INT AUTO_INCREMENT PRIMARY KEY,
   user_id INT NOT NULL,
   instrument VARCHAR(100) NOT NULL,
-  invested_amount DOUBLE,
-  updated_amount DOUBLE,
+  invested_amount DOUBLE NOT NULL,
+  updated_amount DOUBLE NOT NULL,
   updated_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   last_edited_by VARCHAR(255)
 );
@@ -47,15 +47,26 @@ ALTER TABLE investment_data ADD CONSTRAINT investment_data_user_fk FOREIGN KEY (
 --changeset arun:initial:8
 CREATE TABLE IF NOT EXISTS upload_log (
    id INT AUTO_INCREMENT PRIMARY KEY,
-   investor_id INT NOT NULL,
-   email_id VARCHAR(255) NOT NULL,
-   instrument VARCHAR(100) NOT NULL,
-   invested_amount DOUBLE NOT NULL,
-   updated_amount DOUBLE NOT NULL,
-   updated_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-   last_edited_by VARCHAR(255)
+   investor_id VARCHAR(255),
+   email_id VARCHAR(255),
+   instrument VARCHAR(100),
+   invested_amount DOUBLE,
+   updated_amount DOUBLE,
+   hash VARCHAR(500),
+   uploaded_by VARCHAR(255),
+   updated_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 --changeset arun:initial:9
 CREATE INDEX idx_user_email_id ON user (email_id);
 CREATE INDEX idx_upload_log_email_id ON upload_log (email_id);
+
+--changeset arun:initial:10
+CREATE TABLE IF NOT EXISTS file_hash_log (
+   id INT AUTO_INCREMENT PRIMARY KEY,
+   hash VARCHAR(500),
+   uploaded_by VARCHAR(255),
+   updated_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX idx_file_hash_log ON file_hash_log (hash);

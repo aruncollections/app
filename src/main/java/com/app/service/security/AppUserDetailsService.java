@@ -20,7 +20,7 @@ public class AppUserDetailsService implements UserDetailsService {
     User existingUser =
         userRepository
             .findByEmailId(emailId)
-             .filter(user -> user.isActive())
+            .filter(user -> user.isActive())
             .orElseThrow(() -> new UsernameNotFoundException("User " + emailId + " is not found!"));
 
     return new AppUserDetails(existingUser);

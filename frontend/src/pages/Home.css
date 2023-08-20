@@ -1,0 +1,24 @@
+/* Home.css */
+.dark-theme {
+  background-color: #333;
+  color: white;
+}
+
+.dark-text {
+  color: #ff6600;
+}
+
+.dark-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.dark-table th, .dark-table td {
+  border: 1px solid white;
+  padding: 8px;
+  text-align: left;
+}
+
+.dark-table th {
+  background-color: #555;
+}

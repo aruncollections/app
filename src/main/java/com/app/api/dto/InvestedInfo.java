@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 public class InvestedInfo {
 
-  private String email;
+  private String emailId;
 
   @CsvBindByName private Long investorId;
 
