@@ -1,11 +1,18 @@
 /* Home.css */
+body, html {
+  margin: 0;
+  padding: 0;
+  background-color: black; /* Set the background color of the entire page */
+}
+
 .dark-theme {
   background-color: #333;
   color: white;
+  margin: 0
 }
 
 .dark-text {
-  color: #ff6600;
+  color: #a8b4bf;
 }
 
 .dark-table {

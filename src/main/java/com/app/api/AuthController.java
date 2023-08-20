@@ -83,17 +83,20 @@ public class AuthController {
 
   @PreAuthorize("hasAuthority('ADMIN')")
   @GetMapping("users")
-  public ResponseEntity<List<UserInfo>> getUsers(@RequestParam Boolean isActive) {
+  public ResponseEntity<List<UserInfo>> getUsers(@RequestParam(required = false) Boolean isActive) {
     val users = userService.getAllUsers(isActive)
             .stream()
             .map(u -> UserInfo.builder()
-                    .firstName(u.getFirstName())
-                    .lastName(u.getLastName())
+                    .id(u.getId())
+                    .firstName(u.getFirstName() == null ? "NA" : u.getFirstName())
+                    .lastName(u.getLastName() == null ? "NA" : u.getLastName())
                     .emailId(u.getEmailId())
-                    .isActive(u.isActive())
+                    .password("NA")
+                    .active(u.isActive())
                     .build())
             .collect(Collectors.toList());
 
+    log.info("xxxxx {}", users);
     return ResponseEntity.ok().body(users);
   }
 

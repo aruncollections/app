@@ -86,7 +86,7 @@ function Home() {
           </tr>
         </thead>
         <tbody>
-          {data.map((item) => (
+          {data.length > 0 ? data.map((item) => (
             <tr key={item.id}>
               <td>{item.emailId}</td>
               <td>{item.firstName} {item.lastName}</td>
@@ -95,7 +95,11 @@ function Home() {
               <td>{item.uploadedDate}</td>
               <td>{item.updatedBy}</td>
             </tr>
-          ))}
+          )) : (
+                 <tr>
+                   <td colSpan="6">No data available</td>
+                 </tr>
+               )}
         </tbody>
       </table>
     </div>

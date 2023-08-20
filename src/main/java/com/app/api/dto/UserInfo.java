@@ -9,6 +9,9 @@ import lombok.*;
 public class UserInfo {
 
   @NonNull
+  private Long id;
+
+  @NonNull
   private String emailId;
 
   @NonNull
@@ -20,5 +23,5 @@ public class UserInfo {
   @NonNull
   private String lastName;
 
-  private boolean isActive;
+  private boolean active;
 }
