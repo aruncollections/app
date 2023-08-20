@@ -2,26 +2,29 @@ package com.app.api.dto;
 
 import java.time.LocalDate;
 import liquibase.repackaged.com.opencsv.bean.CsvBindByName;
+import lombok.Builder;
 import lombok.Data;
 
 @Data
 public class InvestedInfo {
 
-  private String emailId;
-
   @CsvBindByName private Long investorId;
 
-  @CsvBindByName private String investorName;
+  @CsvBindByName(required = true) private String emailId;
+
+  private String firstName;
+
+  private String lastName;
 
   @CsvBindByName private Double investedAmount;
 
-  @CsvBindByName private String instrument;
+  private String instrument;
 
   @CsvBindByName private Double updatedAmount;
 
-  @CsvBindByName private String uploadedBy;
+  private String uploadedBy;
 
   private String updatedBy;
 
-  private LocalDate uploadedDate = LocalDate.now();
+  private LocalDate uploadedDate;
 }

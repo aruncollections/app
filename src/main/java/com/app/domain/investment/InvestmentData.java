@@ -20,7 +20,7 @@ public class InvestmentData {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @OneToOne(optional = false)
+  @OneToOne(optional = false, cascade = {CascadeType.ALL})
   private User user;
 
   @Column(nullable = false)

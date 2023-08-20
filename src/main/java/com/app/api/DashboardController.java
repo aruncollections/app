@@ -8,9 +8,14 @@ import java.io.Reader;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import com.app.service.investment.InvestmentService;
 import liquibase.repackaged.com.opencsv.bean.CsvToBean;
 import liquibase.repackaged.com.opencsv.bean.CsvToBeanBuilder;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -19,9 +24,12 @@ import org.springframework.web.multipart.MultipartFile;
 @Slf4j
 @RestController
 @RequestMapping("/dashboard")
+@RequiredArgsConstructor
 public class DashboardController {
 
   List<InvestedInfo> testdata = new ArrayList<>();
+
+  private final InvestmentService investmentService;
 
   @GetMapping("hello")
   public ResponseEntity hello() {
@@ -31,21 +39,26 @@ public class DashboardController {
 
   @GetMapping
   public ResponseEntity<List<InvestedInfo>> getInvestedInfo() {
-    return ResponseEntity.ok().body(testdata);
+    val investmentData = investmentService.getInvestmentData();
+    return ResponseEntity.ok().body(investmentData.stream().map(d -> {
+            val investedInfo = new InvestedInfo();
+            investedInfo.setEmailId(d.getUser().getEmailId());
+            investedInfo.setInstrument(d.getInstrument());
+            investedInfo.setInvestedAmount(d.getInvestedAmount());
+            investedInfo.setUpdatedBy(d.getLastEditedBy());
+            investedInfo.setUploadedDate(d.getUpdatedTime().toLocalDate());
+            investedInfo.setUpdatedAmount(d.getUpdatedAmount());
+            return investedInfo;
+    }).collect(Collectors.toList()));
   }
 
   @PreAuthorize("hasAuthority('ADMIN')")
   @PostMapping("/upload")
   public ResponseEntity uploadCSVFile(@RequestParam("file") MultipartFile file) throws IOException {
     try (Reader reader = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
-      CsvToBean<InvestedInfo> csvToBean =
-          new CsvToBeanBuilder(reader)
-              .withType(InvestedInfo.class)
-              .withIgnoreLeadingWhiteSpace(true)
-              .build();
-
+      CsvToBean<InvestedInfo> csvToBean = new CsvToBeanBuilder(reader).withType(InvestedInfo.class).build();
       List<InvestedInfo> uploadedData = csvToBean.parse();
-      testdata.addAll(uploadedData);
+      investmentService.updateInvestmentData(uploadedData);
       log.info("Uploaded data: {}", uploadedData);
     } catch (Exception exception) {
       log.error("Unable to parse {}", exception);

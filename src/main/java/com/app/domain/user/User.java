@@ -4,11 +4,13 @@ import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class User {
@@ -20,6 +22,10 @@ public class User {
   private String emailId;
 
   private String password;
+
+  private String firstName;
+
+  private String lastName;
 
   private boolean isActive;
 

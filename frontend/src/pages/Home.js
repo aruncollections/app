@@ -22,6 +22,8 @@ function Home() {
 
   const handleFileUpload = async (event) => {
     event.preventDefault();
+    setUploadSuccess(false);
+
     const form = event.target;
     const formData = new FormData(form);
     const fileInput = form.querySelector('input[type="file"]');
@@ -90,7 +92,7 @@ function Home() {
               <td>{item.firstName} {item.lastName}</td>
               <td>{item.investedAmount}</td>
               <td>{item.updatedAmount}</td>
-              <td>{item.updatedDate}</td>
+              <td>{item.uploadedDate}</td>
               <td>{item.updatedBy}</td>
             </tr>
           ))}
