@@ -29,3 +29,7 @@ body, html {
 .dark-table th {
   background-color: #555;
 }
+
+.selected-row {
+  background-color: grey; /* Change to your desired highlight color */
+}
