@@ -1,6 +1,7 @@
 package com.app.api;
 
 import com.app.api.dto.InvestedInfo;
+import com.app.service.investment.InvestmentService;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -9,8 +10,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import com.app.service.investment.InvestmentService;
 import liquibase.repackaged.com.opencsv.bean.CsvToBean;
 import liquibase.repackaged.com.opencsv.bean.CsvToBeanBuilder;
 import lombok.RequiredArgsConstructor;
@@ -40,23 +39,29 @@ public class DashboardController {
   @GetMapping
   public ResponseEntity<List<InvestedInfo>> getInvestedInfo() {
     val investmentData = investmentService.getInvestmentData();
-    return ResponseEntity.ok().body(investmentData.stream().map(d -> {
-            val investedInfo = new InvestedInfo();
-            investedInfo.setEmailId(d.getUser().getEmailId());
-            investedInfo.setInstrument(d.getInstrument());
-            investedInfo.setInvestedAmount(d.getInvestedAmount());
-            investedInfo.setUpdatedBy(d.getLastEditedBy());
-            investedInfo.setUploadedDate(d.getUpdatedTime().toLocalDate());
-            investedInfo.setUpdatedAmount(d.getUpdatedAmount());
-            return investedInfo;
-    }).collect(Collectors.toList()));
+    return ResponseEntity.ok()
+        .body(
+            investmentData.stream()
+                .map(
+                    d -> {
+                      val investedInfo = new InvestedInfo();
+                      investedInfo.setEmailId(d.getUser().getEmailId());
+                      investedInfo.setInstrument(d.getInstrument());
+                      investedInfo.setInvestedAmount(d.getInvestedAmount());
+                      investedInfo.setUpdatedBy(d.getLastEditedBy());
+                      investedInfo.setUploadedDate(d.getUpdatedTime().toLocalDate());
+                      investedInfo.setUpdatedAmount(d.getUpdatedAmount());
+                      return investedInfo;
+                    })
+                .collect(Collectors.toList()));
   }
 
   @PreAuthorize("hasAuthority('ADMIN')")
   @PostMapping("/upload")
   public ResponseEntity uploadCSVFile(@RequestParam("file") MultipartFile file) throws IOException {
     try (Reader reader = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
-      CsvToBean<InvestedInfo> csvToBean = new CsvToBeanBuilder(reader).withType(InvestedInfo.class).build();
+      CsvToBean<InvestedInfo> csvToBean =
+          new CsvToBeanBuilder(reader).withType(InvestedInfo.class).build();
       List<InvestedInfo> uploadedData = csvToBean.parse();
       investmentService.updateInvestmentData(uploadedData);
       log.info("Uploaded data: {}", uploadedData);

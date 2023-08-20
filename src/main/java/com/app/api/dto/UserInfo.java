@@ -8,20 +8,15 @@ import lombok.*;
 @NoArgsConstructor
 public class UserInfo {
 
-  @NonNull
-  private Long id;
+  @NonNull private Long id;
 
-  @NonNull
-  private String emailId;
+  @NonNull private String emailId;
 
-  @NonNull
-  private String password;
+  @NonNull private String password;
 
-  @NonNull
-  private String firstName;
+  @NonNull private String firstName;
 
-  @NonNull
-  private String lastName;
+  @NonNull private String lastName;
 
   private boolean active;
 }

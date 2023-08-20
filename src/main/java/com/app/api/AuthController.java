@@ -2,9 +2,11 @@ package com.app.api;
 
 import com.app.api.dto.UserInfo;
 import com.app.domain.user.User;
-import javax.servlet.http.HttpServletRequest;
-
 import com.app.service.security.UserService;
+import java.security.Principal;
+import java.util.List;
+import java.util.stream.Collectors;
+import javax.servlet.http.HttpServletRequest;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,10 +21,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
-import java.util.List;
-import java.util.stream.Collectors;
-
 @Slf4j
 @RestController
 @RequestMapping("/")
@@ -36,9 +34,10 @@ public class AuthController {
   @GetMapping("current-user")
   @ResponseBody
   public ResponseEntity<User> getCurrentUser(Principal principal) {
-    return userService.getCurrentUser(principal)
-            .map(user -> ResponseEntity.ok().body(user))
-            .orElse(ResponseEntity.notFound().build());
+    return userService
+        .getCurrentUser(principal)
+        .map(user -> ResponseEntity.ok().body(user))
+        .orElse(ResponseEntity.notFound().build());
   }
 
   @PostMapping("authenticate")
@@ -59,8 +58,8 @@ public class AuthController {
 
   @PostMapping("signup")
   public ResponseEntity<UserInfo> signupUser(@RequestBody @NonNull UserInfo userInfo) {
-      userService.createNewUser(userInfo);
-      return ResponseEntity.created(null).build();
+    userService.createNewUser(userInfo);
+    return ResponseEntity.created(null).build();
   }
 
   @PutMapping("activate/{emailId}")
@@ -84,20 +83,21 @@ public class AuthController {
   @PreAuthorize("hasAuthority('ADMIN')")
   @GetMapping("users")
   public ResponseEntity<List<UserInfo>> getUsers(@RequestParam(required = false) Boolean isActive) {
-    val users = userService.getAllUsers(isActive)
-            .stream()
-            .map(u -> UserInfo.builder()
-                    .id(u.getId())
-                    .firstName(u.getFirstName() == null ? "NA" : u.getFirstName())
-                    .lastName(u.getLastName() == null ? "NA" : u.getLastName())
-                    .emailId(u.getEmailId())
-                    .password("NA")
-                    .active(u.isActive())
-                    .build())
+    val users =
+        userService.getAllUsers(isActive).stream()
+            .map(
+                u ->
+                    UserInfo.builder()
+                        .id(u.getId())
+                        .firstName(u.getFirstName() == null ? "NA" : u.getFirstName())
+                        .lastName(u.getLastName() == null ? "NA" : u.getLastName())
+                        .emailId(u.getEmailId())
+                        .password("NA")
+                        .active(u.isActive())
+                        .build())
             .collect(Collectors.toList());
 
     log.info("xxxxx {}", users);
     return ResponseEntity.ok().body(users);
   }
-
 }

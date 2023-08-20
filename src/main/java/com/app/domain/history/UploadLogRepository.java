@@ -1,10 +1,7 @@
 package com.app.domain.history;
 
-import com.app.domain.investment.InvestmentData;
-import org.springframework.data.jpa.repository.JpaRepository;
-
 import java.util.List;
-import java.util.Optional;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UploadLogRepository extends JpaRepository<UploadLog, Long> {
 

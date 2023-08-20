@@ -19,6 +19,9 @@ public class Role {
   private String name;
 
   public enum ROLE_NAME {
-    ADMIN, USER, EDITOR, ROOT
+    ADMIN,
+    USER,
+    EDITOR,
+    ROOT
   }
 }

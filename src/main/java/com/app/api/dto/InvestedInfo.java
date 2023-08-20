@@ -2,7 +2,6 @@ package com.app.api.dto;
 
 import java.time.LocalDate;
 import liquibase.repackaged.com.opencsv.bean.CsvBindByName;
-import lombok.Builder;
 import lombok.Data;
 
 @Data
@@ -10,7 +9,8 @@ public class InvestedInfo {
 
   @CsvBindByName private Long investorId;
 
-  @CsvBindByName(required = true) private String emailId;
+  @CsvBindByName(required = true)
+  private String emailId;
 
   private String firstName;
 
