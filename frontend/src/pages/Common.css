@@ -33,3 +33,10 @@ body, html {
 .selected-row {
   background-color: grey; /* Change to your desired highlight color */
 }
+
+.current-user {
+  background-color: #3498db;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
