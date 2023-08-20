@@ -8,6 +8,7 @@ function Users() {
   const [dataFetching, setDataFetching] = useState(true);
   const [updateError, setUpdateError] = useState(null);
   const [activateSuccess, setActivateSuccess] = useState(false);
+  const [inactivateSuccess, setInactivateSuccess] = useState(false);
   const usersUrl = '/users';
   const activateUrl = '/activate';
   const inactivateUrl = '/inactivate';
@@ -29,15 +30,31 @@ function Users() {
   const handleActivate = async () => {
     if (selectedRow !== null) {
       try {
-        // Assuming you have an API endpoint to activate the user
         const response = await axios.put(`${activateUrl}/${selectedRow.emailId}`);
         console.log('User activated:', response.data);
         setActivateSuccess(true);
         setDataFetching(true);
+        setInactivateSuccess(false);
         setUpdateError(null);
       } catch (error) {
         console.error('Error activating user:', error);
         setUpdateError('Error activating user. Please try again.');
+      }
+    }
+  };
+
+  const handleInactivate = async () => {
+    if (selectedRow !== null) {
+      try {
+        const response = await axios.put(`${inactivateUrl}/${selectedRow.emailId}`);
+        console.log('User inactivated:', response.data);
+        setInactivateSuccess(true);
+        setDataFetching(true);
+        setActivateSuccess(false);
+        setUpdateError(null);
+      } catch (error) {
+        console.error('Error inactivating user:', error);
+        setUpdateError('Error inactivating user. Please try again.');
       }
     }
   };
@@ -53,11 +70,15 @@ function Users() {
       {activateSuccess && (
         <p className="success-message">User activated successfully!</p>
       )}
+      {inactivateSuccess && (
+        <p className="success-message">User inactivated successfully!</p>
+      )}
       <br />
 
-      {selectedRow && (
-        <button onClick={handleActivate}>Activate User</button>
-      )}
+      <div className="button-container">
+        <button className="activate-button" onClick={handleActivate}>Activate User</button>
+        <button className="inactivate-button" onClick={handleInactivate}>Inactivate User</button>
+      </div>
 
       <table className="dark-table">
         <thead>
