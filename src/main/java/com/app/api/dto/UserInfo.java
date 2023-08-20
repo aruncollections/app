@@ -19,4 +19,6 @@ public class UserInfo {
 
   @NonNull
   private String lastName;
+
+  private boolean isActive;
 }

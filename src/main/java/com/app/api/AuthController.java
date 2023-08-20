@@ -8,8 +8,10 @@ import com.app.service.security.UserService;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,6 +20,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -75,6 +79,22 @@ public class AuthController {
   public String logout(HttpServletRequest request) {
     request.getSession().invalidate();
     return "redirect:/login";
+  }
+
+  @PreAuthorize("hasAuthority('ADMIN')")
+  @GetMapping("users")
+  public ResponseEntity<List<UserInfo>> getUsers(@RequestParam Boolean isActive) {
+    val users = userService.getAllUsers(isActive)
+            .stream()
+            .map(u -> UserInfo.builder()
+                    .firstName(u.getFirstName())
+                    .lastName(u.getLastName())
+                    .emailId(u.getEmailId())
+                    .isActive(u.isActive())
+                    .build())
+            .collect(Collectors.toList());
+
+    return ResponseEntity.ok().body(users);
   }
 
 }

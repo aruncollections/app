@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import java.security.Principal;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -91,5 +92,14 @@ public class UserService {
            user.setActive(flag);
            log.info("User {}'s active status set to {}", emailId,flag);
         });
+    }
+
+    @Transactional(readOnly = true)
+    public List<User> getAllUsers(Boolean isActive) {
+        if(isActive == null) {
+            return userRepository.findAll();
+        } else {
+            return userRepository.findAllByIsActive(isActive);
+        }
     }
 }
