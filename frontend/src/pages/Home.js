@@ -1,35 +1,57 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './Home.css'; // Import the CSS file for the component
+import './Home.css';
 
 function Home() {
   const [data, setData] = useState([]);
   const [uploadSuccess, setUploadSuccess] = useState(false);
+  const [dataFetching, setDataFetching] = useState(true);
+  const [uploadError, setUploadError] = useState(null);
   const dashboardUrl = '/dashboard';
   const uploadUrl = '/dashboard/upload';
 
   useEffect(() => {
     fetch(dashboardUrl)
       .then((response) => response.json())
-      .then((data) => setData(data))
+      .then((data) => {
+        setData(data);
+        setDataFetching(false);
+      })
       .catch((error) => console.error('Error fetching data:', error));
-  }, []);
+  }, [dataFetching]);
 
   const handleFileUpload = async (event) => {
     event.preventDefault();
-    const formData = new FormData(event.target); // Create FormData from the form
+    const form = event.target;
+    const formData = new FormData(form);
+    const fileInput = form.querySelector('input[type="file"]');
+    const file = fileInput.files[0];
 
-    try {
-      const response = await axios.post(uploadUrl, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      console.log('File uploaded successfully:', response.data);
-      setUploadSuccess(true);
-    } catch (error) {
-      console.error('Error uploading file:', error);
-      // Handle error and update your UI
+    if (file) {
+      const fileExtension = file.name.split('.').pop().toLowerCase();
+
+      if (fileExtension !== 'csv') {
+        setUploadError('Only CSV files are allowed.');
+        form.reset();
+        return;
+      }
+
+      try {
+        const response = await axios.post(uploadUrl, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+        console.log('File uploaded successfully:', response.data);
+        setUploadSuccess(true);
+        setDataFetching(true);
+        setUploadError(null);
+      } catch (error) {
+        console.error('Error uploading file:', error);
+        setUploadError('Error uploading file. Please try again.');
+      } finally {
+        form.reset();
+      }
     }
   };
 
@@ -41,17 +63,20 @@ function Home() {
         <button type="submit">Upload File</button>
       </form>
 
-        <br/>
-        {uploadSuccess && (
-            <p className="success-message">File uploaded successfully!</p>
-        )}
-        <br/>
+      <br />
+      {uploadSuccess && (
+        <p className="success-message">File uploaded successfully!</p>
+      )}
+      {uploadError && (
+        <p className="error-message">{uploadError}</p>
+      )}
+      <br />
 
       <table className="dark-table">
         <thead>
           <tr>
             <th>Email</th>
-            <th>Invested Fin. Instrument</th>
+            <th>Name</th>
             <th>Invested Amount</th>
             <th>Updated Amount</th>
             <th>Updated Date</th>
@@ -62,7 +87,7 @@ function Home() {
           {data.map((item) => (
             <tr key={item.id}>
               <td>{item.emailId}</td>
-              <td>{item.instrument}</td>
+              <td>{item.firstName} {item.lastName}</td>
               <td>{item.investedAmount}</td>
               <td>{item.updatedAmount}</td>
               <td>{item.updatedDate}</td>
