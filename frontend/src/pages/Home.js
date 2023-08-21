@@ -59,20 +59,20 @@ function Home() {
 
   return (
     <div className="dark-theme">
-      <h2 className="dark-text">Invested Info:</h2>
       <form onSubmit={handleFileUpload} action={uploadUrl} method="post" encType="multipart/form-data">
-        <input type="file" name="file" />
-        <button type="submit">Upload File</button>
+        <div className="button-container">
+            <input className="button" type="file" name="file" />
+            <button className="button" type="submit">Upload File</button>
+        </div>
       </form>
+      <br/>
 
-      <br />
       {uploadSuccess && (
         <p className="success-message">File uploaded successfully!</p>
       )}
       {uploadError && (
         <p className="error-message">{uploadError}</p>
       )}
-      <br />
 
       <table className="dark-table">
         <thead>

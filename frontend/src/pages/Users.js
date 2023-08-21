@@ -61,24 +61,20 @@ function Users() {
 
   return (
     <div className="dark-theme">
-      <h2 className="dark-text">Users in system</h2>
-
-      <br />
-      {updateError && (
-        <p className="error-message">{updateError}</p>
-      )}
-      {activateSuccess && (
-        <p className="success-message">User activated successfully!</p>
-      )}
-      {inactivateSuccess && (
-        <p className="success-message">User inactivated successfully!</p>
-      )}
-      <br />
-
       <div className="button-container">
-        <button className="activate-button" onClick={handleActivate}>Activate User</button>
-        <button className="inactivate-button" onClick={handleInactivate}>Inactivate User</button>
+        <button className="button" onClick={handleActivate}>Activate User</button>
+        <button className="button" onClick={handleInactivate}>Inactivate User</button>
       </div>
+       {updateError && (
+              <p className="error-message">{updateError}</p>
+            )}
+            {activateSuccess && (
+              <p className="success-message">User activated successfully!</p>
+            )}
+            {inactivateSuccess && (
+              <p className="success-message">User inactivated successfully!</p>
+            )}
+      <br />
 
       <table className="dark-table">
         <thead>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, NavLink } from 'react-router-dom';
 import './App.css';
 import Home from './pages/Home';
 import Users from './pages/Users';
@@ -31,16 +31,16 @@ function App() {
         <nav>
           <ul>
             <li>
-              <Link to="/">Investor Home</Link>
+              <NavLink exact to="/" activeClassName="active">Investor Home</NavLink>
             </li>
             <li>
-              <Link to="/users">Users</Link>
+              <NavLink to="/users" activeClassName="active">Users</NavLink>
             </li>
             <li>
-              <Link to="/about">About</Link>
+              <NavLink to="/about" activeClassName="active">About</NavLink>
             </li>
             <li>
-              <Link to="/logout">Logout</Link>
+              <NavLink to="/logout">Logout</NavLink>
             </li>
 
             <li>

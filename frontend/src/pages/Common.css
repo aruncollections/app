@@ -2,7 +2,7 @@
 body, html {
   margin: 0;
   padding: 0;
-  background-color: black; /* Set the background color of the entire page */
+  background-color: black;
 }
 
 .dark-theme {
@@ -31,7 +31,7 @@ body, html {
 }
 
 .selected-row {
-  background-color: grey; /* Change to your desired highlight color */
+  background-color: grey;
 }
 
 .current-user {
@@ -39,4 +39,30 @@ body, html {
   color: white;
   padding: 5px 10px;
   border-radius: 5px;
+}
+
+.active {
+  background-color: #516e8c;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+.button {
+  background-color: #516e8c;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.button:hover {
+  background-color: #28a745;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
 }
