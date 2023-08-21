@@ -94,7 +94,7 @@ public class UserService {
         user.getEmailId(),
         userInfo.getFirstName(),
         userInfo.getLastName());
-    return userRepository.save(new User());
+    return userRepository.save(user);
   }
 
   @Transactional

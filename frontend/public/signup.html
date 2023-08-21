@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Signup to Investment Tracking Application</title>
+  <style>
+       body {
+           background-color: black;
+           color: white;
+           font-family: Arial, sans-serif;
+       }
+
+       .signup-form {
+           max-width: 400px;
+           margin: 0 auto;
+           padding: 20px;
+           border: 1px solid white;
+           border-radius: 10px;
+           background-color: rgba(0, 0, 0, 0.7);
+       }
+
+       .signup-form h2 {
+           text-align: center;
+       }
+
+       .signup-form label {
+           display: block;
+           margin-bottom: 5px;
+       }
+
+       .signup-form input {
+           width: 100%;
+           padding: 8px;
+           margin-bottom: 15px;
+           border: 1px solid white;
+           background-color: transparent;
+           color: white;
+       }
+
+       .signup-form button {
+           display: block;
+           width: 100%;
+           padding: 10px;
+           border: none;
+           background-color: #1c87c9;
+           color: white;
+           cursor: pointer;
+       }
+
+       .signup-form button:hover {
+           background-color: #155a8a;
+       }
+
+       .signup-form .login-link {
+           text-align: center;
+           margin-top: 10px;
+       }
+
+       .login-link a {
+           color: #1c87c9;
+           text-decoration: none;
+       }
+
+       .hidden {
+           display: none;
+       }
+
+       .error-message {
+           color: red;
+           display: none;
+       }
+   </style>
+</head>
+<body>
+<div class="signup-form">
+  <h2>Signup Form</h2>
+
+  <!-- Display error message for password mismatch -->
+  <p class="error-message password-error hidden">
+    Passwords do not match. Please reenter your password.
+  </p>
+
+  <!-- Display success message if signup is successful -->
+  <p class="success-message hidden">
+    Signup successful! You can now login.
+  </p>
+
+  <!-- Display error message for general errors -->
+  <p class="error-message general-error hidden">
+    An error occurred. Please check the form and try again.
+  </p>
+
+  <form id="signupForm">
+    <label for="emailId">Email Id</label>
+    <input type="text" id="emailId" name="emailId" required><br>
+
+    <label for="firstName">First Name</label>
+    <input type="text" id="firstName" name="firstName" required><br>
+
+    <label for="lastName">Last Name</label>
+    <input type="text" id="lastName" name="lastName" required><br>
+
+    <label for="password">Password</label>
+    <input type="password" id="password" name="password" required><br>
+
+    <label for="reenterPassword">Reenter Password</label>
+    <input type="password" id="reenterPassword" name="reenterPassword" required><br>
+
+    <button type="button" onclick="handleFormSubmit()">Sign Up</button>
+  </form>
+  <div class="login-link">
+    <a href="/login">Already have an account? Login here.</a>
+  </div>
+</div>
+
+<script>
+function handleFormSubmit() {
+  const emailId = document.getElementById("emailId").value;
+  const firstName = document.getElementById("firstName").value;
+  const lastName = document.getElementById("lastName").value;
+  const password = document.getElementById("password").value;
+  const reenterPassword = document.getElementById("reenterPassword").value;
+
+  // Check if passwords match
+  if (password !== reenterPassword) {
+    const passwordErrorMessage = document.querySelector(".password-error");
+    passwordErrorMessage.classList.remove("hidden");
+    return; // Stop form submission
+  }
+
+  const data = {
+    emailId: emailId,
+    firstName: firstName,
+    lastName: lastName,
+    password: password,
+    reenterPassword: reenterPassword
+  };
+
+  const successMessage = document.querySelector(".success-message");
+  const passwordErrorMessage = document.querySelector(".password-error");
+  const generalErrorMessage = document.querySelector(".general-error");
+
+  fetch("/signup", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(data)
+  })
+  .then(response => response.json())
+  .then(result => {
+    if (result.success) {
+      successMessage.classList.remove("hidden");
+      passwordErrorMessage.classList.add("hidden");
+      generalErrorMessage.classList.add("hidden");
+    } else {
+      successMessage.classList.add("hidden");
+      passwordErrorMessage.classList.add("hidden");
+      generalErrorMessage.classList.remove("hidden");
+    }
+  })
+  .catch(error => {
+    console.error("Error submitting form:", error);
+    successMessage.classList.add("hidden");
+    passwordErrorMessage.classList.add("hidden");
+    generalErrorMessage.classList.remove("hidden");
+  });
+}
+</script>
+</body>
+</html>

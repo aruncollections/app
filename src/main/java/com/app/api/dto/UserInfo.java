@@ -8,7 +8,7 @@ import lombok.*;
 @NoArgsConstructor
 public class UserInfo {
 
-  @NonNull private Long id;
+  private Long id;
 
   @NonNull private String emailId;
 
