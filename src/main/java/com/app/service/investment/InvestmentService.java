@@ -4,6 +4,9 @@ import static com.app.domain.user.Role.ROLE_NAME.ADMIN;
 import static com.app.domain.user.Role.ROLE_NAME.USER;
 
 import com.app.api.dto.InvestedInfo;
+import com.app.domain.history.FileHashLog;
+import com.app.domain.history.FileHashLogRepository;
+import com.app.domain.history.UploadLog;
 import com.app.domain.history.UploadLogRepository;
 import com.app.domain.investment.InvestmentData;
 import com.app.domain.investment.InvestmentDataRepository;
@@ -12,6 +15,7 @@ import com.app.domain.user.RoleRepository;
 import com.app.domain.user.User;
 import com.app.domain.user.UserRepository;
 import com.app.service.security.UserService;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -32,9 +36,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class InvestmentService {
 
   private final EntityManager entityManager;
+
   private final InvestmentDataRepository investmentDataRepository;
 
   private final UploadLogRepository uploadLogRepository;
+
+  private final FileHashLogRepository fileHashLogRepository;
 
   private final UserRepository userRepository;
 
@@ -92,8 +99,7 @@ public class InvestmentService {
                     invData.setInvestedAmount(info.getInvestedAmount());
                     invData.setUpdatedAmount(info.getUpdatedAmount());
                     invData.setUpdatedTime(LocalDateTime.now());
-                    invData.setLastEditedBy(
-                        userService.getCurrentUser().map(u -> u.getEmailId()).orElse("UNKNOWN"));
+                    invData.setLastEditedBy(getEditedBy());
                     return invData;
                   } else {
                     return InvestmentData.builder()
@@ -102,14 +108,19 @@ public class InvestmentService {
                         .updatedTime(LocalDateTime.now())
                         .investedAmount(info.getInvestedAmount())
                         .updatedAmount(info.getUpdatedAmount())
-                        .lastEditedBy(
-                            userService.getCurrentUser().map(u -> u.getEmailId()).orElse("UNKNOWN"))
+                        .lastEditedBy(getEditedBy())
                         .build();
                   }
                 })
             .collect(Collectors.toList());
 
     investmentDataRepository.saveAll(investmentData);
+
+    addUploadLog(investedInfos);
+  }
+
+  private String getEditedBy() {
+    return userService.getCurrentUser().map(u -> u.getEmailId()).orElse("UNKNOWN");
   }
 
   private User createAndGetUser(String emailId, Map<String, User> userMap) {
@@ -126,5 +137,38 @@ public class InvestmentService {
               .roles(Set.of(roleEntity))
               .build());
     }
+  }
+
+  public void addUploadLog(List<InvestedInfo> investedInfos) {
+    val fileHashLog =
+        FileHashLog.builder()
+            .hash(investedInfos.hashCode() + "-" + LocalDate.now().hashCode())
+            .uploadedBy(getEditedBy())
+            .build();
+
+    if (fileHashLogRepository.existsByHash(fileHashLog.getHash())) {
+      throw new UnsupportedOperationException("Data already uploaded - " + fileHashLog.getHash());
+    } else {
+      fileHashLogRepository.save(fileHashLog);
+    }
+
+    val uploadLogs =
+        investedInfos.stream()
+            .map(
+                i ->
+                    UploadLog.builder()
+                        .uploadedBy(getEditedBy())
+                        .emailId(i.getEmailId())
+                        .investedAmount(i.getInvestedAmount())
+                        .updatedAmount(i.getUpdatedAmount())
+                        .emailId(i.getEmailId())
+                        .instrument(i.getInstrument())
+                        .investorId(String.valueOf(i.getInvestorId()))
+                        .updatedTime(LocalDateTime.now())
+                        .hash(fileHashLog.getHash())
+                        .build())
+            .collect(Collectors.toList());
+
+    uploadLogRepository.saveAll(uploadLogs);
   }
 }
