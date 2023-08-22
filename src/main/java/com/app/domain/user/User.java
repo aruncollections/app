@@ -27,7 +27,8 @@ public class User {
 
   private String lastName;
 
-  private boolean isActive;
+  @Column(name = "is_active")
+  private boolean active;
 
   @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   @JoinTable(

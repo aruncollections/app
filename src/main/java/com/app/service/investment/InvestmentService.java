@@ -121,7 +121,7 @@ public class InvestmentService {
       return userRepository.save(
           User.builder()
               .emailId(emailId)
-              .isActive(false)
+              .active(false)
               .password("NONE")
               .roles(Set.of(roleEntity))
               .build());

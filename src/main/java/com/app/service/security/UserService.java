@@ -88,7 +88,7 @@ public class UserService {
             .firstName(userInfo.getFirstName().trim())
             .lastName(userInfo.getLastName().trim())
             .roles(Set.of(roleEntity))
-            .isActive(false)
+            .active(false)
             .build();
     log.info(
         "Creating user {}, {} {}",
@@ -114,7 +114,7 @@ public class UserService {
     if (isActive == null) {
       return userRepository.findAll();
     } else {
-      return userRepository.findAllByIsActive(isActive);
+      return userRepository.findAllByActive(isActive);
     }
   }
 }
