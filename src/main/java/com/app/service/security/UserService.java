@@ -68,6 +68,7 @@ public class UserService {
       user.setPassword(passwordEncoder.encode(userInfo.getPassword().trim()));
       user.setFirstName(userInfo.getFirstName().trim());
       user.setLastName(userInfo.getLastName().trim());
+      user.setActive(false);
       log.info(
           "Updating user {}, {} {}",
           user.getEmailId(),
