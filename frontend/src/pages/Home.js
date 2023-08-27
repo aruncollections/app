@@ -49,8 +49,8 @@ function Home() {
         setDataFetching(true);
         setUploadError(null);
       } catch (error) {
-        console.error('Error uploading file:', error);
-        setUploadError('Error uploading file. Please try again.');
+        console.error('Error in uploading file:', error);
+        setUploadError('Error in uploading file. Please try again.');
       } finally {
         form.reset();
       }

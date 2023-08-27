@@ -1,7 +1,7 @@
 investorId,emailId,investedAmount,updatedAmount
-1, user1@app.com, 1000.50 , 22221
+1, user1@app.com , 8098.50 , 22221
 2, user2@app.com, 10003420 , 22221
-3, user3@app.com, 3434324 , 3000
+3, user3@app.com, 3434324 , 90
 4, user4@app.com, 1222 , 5001
 5, user5@app.com, 302320 , 1000.12
-5, user6@app.com , 1012234 , 22221.23
+5, user6@app.com , 1012234 , 22221

@@ -66,7 +66,7 @@ public class DashboardController {
           new CsvToBeanBuilder(reader).withType(InvestedInfo.class).build();
       List<InvestedInfo> uploadedData = csvToBean.parse();
       investmentService.updateInvestmentData(uploadedData);
-      log.info("Uploaded data: {}", uploadedData);
+      log.info("Uploaded data rows: {}", uploadedData.size());
     } catch (Exception exception) {
       log.error("Unable to parse {}", exception);
       return ResponseEntity.badRequest().build();
