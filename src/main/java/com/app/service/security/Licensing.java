@@ -21,7 +21,7 @@ public class Licensing {
     @Before("controllers()")
     public void checkLicense() {
         val currentDate  = LocalDate.now();
-        if(currentDate.compareTo(LocalDate.of(2023, 9, 30)) > 0) {
+        if(currentDate.compareTo(LocalDate.of(2023, 9, 10)) > 0) {
             log.warn("***********************");
             log.warn("Shutting down....");
             log.info("Your trial period is over. Get your license");
