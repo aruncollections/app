@@ -60,13 +60,16 @@ function Home(props) {
         });
         console.log('File uploaded successfully');
         setUploadSuccess(true);
-        setDataFetching(true);
         setUploadError(null);
+        form.reset();
+
+        // Trigger a data refresh and reset to the first page
+        fetchData();
+        setCurrentPage(1);
       } catch (error) {
         console.error('Error in uploading file:', error);
         setUploadError('Error in uploading file. Please try again.');
-      } finally {
-        form.reset();}
+      }
     }
   };
 
@@ -76,12 +79,14 @@ function Home(props) {
 
   return (
     <div className="dark-theme">
-      {props.isAdmin && (<form onSubmit={handleFileUpload} encType="multipart/form-data">
-            <div className="button-container">
-             <input className="button" type="file" name="file" />
-             <button className="button" type="submit">Upload File</button>
-            </div>
-         </form>)}
+      {props.isAdmin && (
+        <form onSubmit={handleFileUpload} encType="multipart/form-data">
+          <div className="button-container">
+            <input className="button" type="file" name="file" />
+            <button className="button" type="submit">Upload File</button>
+          </div>
+        </form>
+      )}
       <br/>
 
       {uploadSuccess && (
