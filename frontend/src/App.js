@@ -8,6 +8,7 @@ import Logout from './pages/Logout';
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
+  const [isAdmin, setAdmin] = useState(false);
 
   useEffect(() => {
     async function fetchCurrentUser() {
@@ -16,6 +17,9 @@ function App() {
         if (response.ok) {
           const userData = await response.json();
           setCurrentUser(userData);
+          console.log('User ' + JSON.stringify(userData))
+          console.log('User admin ? ' + userData.roles.some((role) => role.name === "ADMIN"))
+          setAdmin(userData.roles.some((role) => role.name === "ADMIN"));
         }
       } catch (error) {
         console.error('Error fetching current user:', error);
@@ -33,9 +37,9 @@ function App() {
             <li>
               <NavLink exact to="/" activeClassName="active">Investor Home</NavLink>
             </li>
-            <li>
+             {isAdmin && (<li>
               <NavLink to="/users" activeClassName="active">Users</NavLink>
-            </li>
+            </li>)}
             <li>
               <NavLink to="/about" activeClassName="active">About</NavLink>
             </li>
