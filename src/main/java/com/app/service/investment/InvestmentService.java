@@ -17,6 +17,7 @@ import com.app.domain.user.UserRepository;
 import com.app.service.security.UserService;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -82,6 +83,11 @@ public class InvestmentService {
   public void updateInvestmentData(List<InvestedInfo> investedInfos) {
     val emailIds =
         investedInfos.stream().map(infos -> infos.getEmailId().trim()).collect(Collectors.toList());
+
+    if(emailIds.size() > (new HashSet<>(emailIds)).size()) {
+      throw new IllegalArgumentException("Duplicate users records found in uploaded data");
+    }
+
     val existingInvestmentData = investmentDataRepository.findByUserEmailIdIn(emailIds);
     val existingUserInvestmentDataMap =
         existingInvestmentData.stream()

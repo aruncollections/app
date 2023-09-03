@@ -70,7 +70,7 @@ public class DashboardController {
       investmentService.updateInvestmentData(uploadedData);
       log.info("Uploaded data rows: {}", uploadedData.size());
     } catch (Exception exception) {
-      log.error("Unable to parse {}", exception);
+      log.error("Error in uploading, {}", exception);
       return ResponseEntity.badRequest().build();
     }
     return ResponseEntity.accepted().build();
