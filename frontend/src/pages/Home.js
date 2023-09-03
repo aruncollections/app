@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './Common.css';
 
-function Home() {
+function Home(props) {
   const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [uploadSuccess, setUploadSuccess] = useState(false);
@@ -59,13 +59,13 @@ function Home() {
           },
         });
         console.log('File uploaded successfully');
+        setUploadSuccess(true);
+        setDataFetching(true);
+        setUploadError(null);
       } catch (error) {
         console.error('Error in uploading file:', error);
         setUploadError('Error in uploading file. Please try again.');
       } finally {
-        setUploadSuccess(true);
-        setDataFetching(true);
-        setUploadError(null);
         form.reset();}
     }
   };
@@ -76,12 +76,12 @@ function Home() {
 
   return (
     <div className="dark-theme">
-      <form onSubmit={handleFileUpload} encType="multipart/form-data">
-        <div className="button-container">
-          <input className="button" type="file" name="file" />
-          <button className="button" type="submit">Upload File</button>
-        </div>
-      </form>
+      {props.isAdmin && (<form onSubmit={handleFileUpload} encType="multipart/form-data">
+            <div className="button-container">
+             <input className="button" type="file" name="file" />
+             <button className="button" type="submit">Upload File</button>
+            </div>
+         </form>)}
       <br/>
 
       {uploadSuccess && (
