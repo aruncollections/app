@@ -68,8 +68,8 @@ public class InvestmentService {
             .isPresent();
 
     if (isAdmin) {
-      log.trace("all data {}", investmentDataRepository.findAll().size());
-      return investmentDataRepository.findAll();
+      log.trace("All data {}", investmentDataRepository.findAll().size());
+      return investmentDataRepository.findAllByOrderByUserEmailIdAscUserFirstNameAsc();
     } else {
       return userService
           .getCurrentUser()

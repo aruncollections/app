@@ -8,6 +8,8 @@ public interface InvestmentDataRepository extends JpaRepository<InvestmentData, 
 
   Optional<InvestmentData> findByUserEmailId(String emailId);
 
+  List<InvestmentData> findAllByOrderByUserEmailIdAscUserFirstNameAsc();
+
   List<InvestmentData> findAllByUserEmailId(String emailId);
 
   List<InvestmentData> findByUserEmailIdIn(List<String> emailIds);

@@ -48,6 +48,8 @@ public class DashboardController {
                     d -> {
                       val investedInfo = new InvestedInfo();
                       investedInfo.setEmailId(d.getUser().getEmailId());
+                      investedInfo.setFirstName(d.getUser().getFirstName());
+                      investedInfo.setLastName(d.getUser().getLastName());
                       investedInfo.setInstrument(d.getInstrument());
                       investedInfo.setInvestedAmount(d.getInvestedAmount());
                       investedInfo.setUpdatedBy(d.getLastEditedBy());

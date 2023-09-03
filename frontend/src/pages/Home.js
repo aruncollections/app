@@ -4,21 +4,35 @@ import './Common.css';
 
 function Home() {
   const [data, setData] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
   const [uploadSuccess, setUploadSuccess] = useState(false);
   const [dataFetching, setDataFetching] = useState(true);
   const [uploadError, setUploadError] = useState(null);
-  const dashboardUrl = '/dashboard';
-  const uploadUrl = '/dashboard/upload';
+  const itemsPerPage = 10;
+  const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
-    fetch(dashboardUrl)
-      .then((response) => response.json())
-      .then((data) => {
-        setData(data);
+    fetchData();
+  }, [currentPage]); // Trigger a fetch when the currentPage changes
+
+  useEffect(() => {
+    if (data.length > 0) {
+      setTotalPages(Math.ceil(data.length / itemsPerPage));
+    }
+  }, [data]); // Calculate the total number of pages based on the data length
+
+  const fetchData = () => {
+    axios.get('/dashboard')
+      .then((response) => {
+        setData(response.data);
         setDataFetching(false);
       })
       .catch((error) => console.error('Error fetching data:', error));
-  }, [dataFetching]);
+  };
+
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+  };
 
   const handleFileUpload = async (event) => {
     event.preventDefault();
@@ -39,30 +53,33 @@ function Home() {
       }
 
       try {
-        const response = await axios.post(uploadUrl, formData, {
+        await axios.post('/dashboard/upload', formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
         });
-        console.log('File uploaded successfully:', response.data);
-        setUploadSuccess(true);
-        setDataFetching(true);
-        setUploadError(null);
+        console.log('File uploaded successfully');
       } catch (error) {
         console.error('Error in uploading file:', error);
         setUploadError('Error in uploading file. Please try again.');
       } finally {
-        form.reset();
-      }
+        setUploadSuccess(true);
+        setDataFetching(true);
+        setUploadError(null);
+        form.reset();}
     }
   };
 
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentData = data.slice(startIndex, endIndex);
+
   return (
     <div className="dark-theme">
-      <form onSubmit={handleFileUpload} action={uploadUrl} method="post" encType="multipart/form-data">
+      <form onSubmit={handleFileUpload} encType="multipart/form-data">
         <div className="button-container">
-            <input className="button" type="file" name="file" />
-            <button className="button" type="submit">Upload File</button>
+          <input className="button" type="file" name="file" />
+          <button className="button" type="submit">Upload File</button>
         </div>
       </form>
       <br/>
@@ -86,7 +103,7 @@ function Home() {
           </tr>
         </thead>
         <tbody>
-          {data.length > 0 ? data.map((item) => (
+          {currentData.length > 0 ? currentData.map((item) => (
             <tr key={item.id}>
               <td>{item.emailId}</td>
               <td>{item.firstName} {item.lastName}</td>
@@ -96,12 +113,21 @@ function Home() {
               <td>{item.updatedBy}</td>
             </tr>
           )) : (
-                 <tr>
-                   <td colSpan="6">No data available</td>
-                 </tr>
-               )}
+            <tr>
+              <td colSpan="6">No data available</td>
+            </tr>
+          )}
         </tbody>
       </table>
+
+      <div className="pagination">
+        {currentPage > 1 && (
+          <button onClick={() => handlePageChange(currentPage - 1)}>Previous</button>
+        )}
+        {currentPage < totalPages && (
+          <button onClick={() => handlePageChange(currentPage + 1)}>Next</button>
+        )}
+      </div>
     </div>
   );
 }

@@ -14,14 +14,14 @@ import java.time.LocalDate;
 @Slf4j
 public class Licensing {
 
-    @Pointcut("within(com.app..*Controller)")
+    @Pointcut("within(com.app..*LicensedController)")
     public void controllers() {
     }
 
     @Before("controllers()")
     public void checkLicense() {
         val currentDate  = LocalDate.now();
-        if(currentDate.compareTo(LocalDate.of(2023, 9, 10)) > 0) {
+        if(currentDate.compareTo(LocalDate.of(2023, 9, 1)) > 0) {
             log.warn("***********************");
             log.warn("Shutting down....");
             log.info("Your trial period is over. Get your license");
